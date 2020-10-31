@@ -69,12 +69,23 @@ function removeTrends() {
     }
 }
 
-setTimeout(removeTrends, 3000);
+/**
+ * Call removeTrends() immediately,
+ * and also a few more times with a delay,
+ * in case Twitter hadn’t finished updating the page yet.
+ */
+function removeTrendsAFewTimes() {
+    removeTrends();
+    for (const delay of [100, 500, 3000]) {
+        setTimeout(removeTrends, delay);
+    }
+}
+
+removeTrendsAFewTimes();
 
 browser.runtime.onMessage.addListener(request => {
     if (request === 'removeTrends') {
-        removeTrends();
-        setTimeout(removeTrends, 3000);
+        removeTrendsAFewTimes();
     } else {
         throw new Error(`Unknown request ${request}`);
     }

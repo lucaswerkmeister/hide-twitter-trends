@@ -1,3 +1,9 @@
+/**
+ * Content script.
+ * Hides Twitter Trends on page load
+ * and when receiving a removeTrends message.
+ */
+
 'use strict';
 
 /**
@@ -63,5 +69,13 @@ function removeTrends() {
     }
 }
 
-setTimeout(removeTrends, 3 * 1000);
-setInterval(removeTrends, 60 * 1000);
+setTimeout(removeTrends, 3000);
+
+browser.runtime.onMessage.addListener(request => {
+    if (request === 'removeTrends') {
+        removeTrends();
+        setTimeout(removeTrends, 3000);
+    } else {
+        throw new Error(`Unknown request ${request}`);
+    }
+});

@@ -9,6 +9,14 @@
             "js": ["hide-twitter-trends.js"]
         }
     ],
+    "background": {
+        "scripts": [
+            "listen-for-navigation.js"
+        ]
+    },
+    "permissions": [
+        "webNavigation"
+    ],
     "browser_specific_settings": {
         "gecko": {
             "id": "hide-twitter-trends@lucaswerkmeister.de"

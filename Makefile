@@ -1,4 +1,4 @@
 .PHONY: all
 
 all:
-	web-ext build -i '*.xcf'
+	web-ext build -i '*.xcf' -i Makefile

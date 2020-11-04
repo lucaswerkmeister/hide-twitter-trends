@@ -17,6 +17,10 @@
     "permissions": [
         "webNavigation"
     ],
+    "icons": {
+        "48": "logo.svg",
+        "96": "logo.svg"
+    },
     "browser_specific_settings": {
         "gecko": {
             "id": "hide-twitter-trends@lucaswerkmeister.de"

@@ -7,17 +7,21 @@
 'use strict';
 
 /**
- * Try to remove the Trends widget.
- * We mainly identify it using the cogwheel link in the corner of the widget,
- * then look at some of the neighboring DOM trying to reduce false positives.
- * (The many class names on the elements don’t look stable,
- * so we only match on element names, hoping they’re more reliable.)
+ * Try to remove the Trends widget. We try several approaches to identify it.
+ * They all try to identify the widget without relying on localized strings,
+ * and also without any class names, which don’t look very stable.
+ * Checks on the surrounding DOM try to reduce false positives.
  *
- * There is also a version of the Trends widget without the cogwheel.
- * We can try to identify this using the “trending with…” links,
- * which, if they exist, have &src=trend_click in the URL.
- * (The actual trends themselves aren’t links at all, but divs with event handlers.)
- * If none of the trends are “trending with” something, we’re out of luck.
+ * 1. Trends widget with a cogwheel link in the corner of the widget;
+ *    the cogwheel is a real link with a constant href.
+ * 2. Trends widget with a “show more” link at the end;
+ *    another real link with a constant href.
+ * 3. Trends widget with some “trending with…” links in the trends;
+ *    real links with &src=trend_click in the URL.
+ *
+ * Most other things in these widgets, including the trends themselves,
+ * are unfortunately not links but divs with event handlers,
+ * so we can’t match on them very well.
  */
 function removeTrends() {
     for (let trends of document.querySelectorAll('a[href="/settings/trends"]')) {
@@ -43,12 +47,10 @@ function removeTrends() {
         while ((parent = trends.parentElement).childElementCount == 1)
             trends = parent;
         trends.remove();
+        return;
     }
-    for (let trends of document.querySelectorAll('a[href*="&src=trend_click"]')) {
-        if (!document.body.contains(trends)) {
-            // we already removed the parent trends widget
-            continue;
-        }
+
+    for (let trends of document.querySelectorAll('a[href="/i/trends"]')) {
         if (trends.closest('article')) {
             // trends link in a tweet
             continue;
@@ -66,6 +68,28 @@ function removeTrends() {
         while ((parent = trends.parentElement).childElementCount == 1)
             trends = parent;
         trends.remove();
+        return;
+    }
+
+    for (let trends of document.querySelectorAll('a[href*="&src=trend_click"]')) {
+        if (trends.closest('article')) {
+            // trends link in a tweet
+            continue;
+        }
+        trends = trends.closest('section');
+        if (!trends) {
+            // (unclear if this can happen)
+            continue;
+        }
+        if (trends.firstElementChild.tagName !== 'H1') {
+            // (unclear if this can happen)
+            continue;
+        }
+        let parent;
+        while ((parent = trends.parentElement).childElementCount == 1)
+            trends = parent;
+        trends.remove();
+        return;
     }
 }
 

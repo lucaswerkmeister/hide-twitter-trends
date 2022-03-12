@@ -105,7 +105,17 @@ function removeTrendsAFewTimes() {
     }
 }
 
+/**
+ * Call removeTrends() every so often,
+ * since Twitter occasionally seems to re-render itself
+ * even without any navigation activity.
+ */
+function removeTrendsPeriodically() {
+    setInterval(removeTrends, 30 * 60 * 1000); // every 30 minutes
+}
+
 removeTrendsAFewTimes();
+removeTrendsPeriodically();
 
 browser.runtime.onMessage.addListener(request => {
     if (request === 'removeTrends') {

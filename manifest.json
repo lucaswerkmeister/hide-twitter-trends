@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Hide Twitter Trends",
     "description": "Hide the Trends widget on Twitter",
-    "version": "0.5",
+    "version": "0.5.1",
     "content_scripts": [
         {
             "matches": ["https://twitter.com/*"],
